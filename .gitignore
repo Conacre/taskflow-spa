@@ -1,0 +1,14 @@
+.idea/
+.vscode/
+*.iml
+
+backend/target/
+backend/data/
+
+tools/
+node_modules/
+
+*.log
+frontend-server*.log
+.DS_Store
+Thumbs.db
