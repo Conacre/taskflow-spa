@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow SPA</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-inner">
+            <div>
+                <p class="eyebrow">SPA-приложение</p>
+                <h1>TaskFlow</h1>
+            </div>
+            <div class="api-status" id="apiStatus">Проверка API</div>
+        </div>
+    </header>
+
+    <main class="app-shell">
+        <section class="task-editor" aria-labelledby="formTitle">
+            <h2 id="formTitle">Новая задача</h2>
+            <form id="taskForm" class="task-form">
+                <input type="hidden" id="taskId">
+
+                <label>
+                    <span>Название</span>
+                    <input id="title" name="title" type="text" maxlength="150" autocomplete="off" required>
+                </label>
+
+                <label>
+                    <span>Описание</span>
+                    <textarea id="description" name="description" rows="5" maxlength="1000"></textarea>
+                </label>
+
+                <div class="form-grid">
+                    <label>
+                        <span>Приоритет</span>
+                        <select id="priority" name="priority">
+                            <option value="LOW">Низкий</option>
+                            <option value="MEDIUM" selected>Средний</option>
+                            <option value="HIGH">Высокий</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Срок</span>
+                        <input id="dueDate" name="dueDate" type="date">
+                    </label>
+                </div>
+
+                <label>
+                    <span>Категория</span>
+                    <input id="category" name="category" type="text" maxlength="80" autocomplete="off">
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit" class="button primary" id="submitButton">Добавить</button>
+                    <button type="button" class="button secondary" id="cancelEditButton" hidden>Отмена</button>
+                </div>
+                <p class="form-error" id="formError" role="alert"></p>
+            </form>
+        </section>
+
+        <section class="tasks-workspace" aria-labelledby="tasksTitle">
+            <div class="toolbar">
+                <div>
+                    <p class="eyebrow">Управление задачами</p>
+                    <h2 id="tasksTitle">Список задач</h2>
+                </div>
+                <button type="button" class="button secondary" id="reloadButton">Обновить</button>
+            </div>
+
+            <div class="stats-grid" id="stats"></div>
+
+            <div class="controls">
+                <div class="segmented" role="group" aria-label="Фильтр по статусу">
+                    <button type="button" data-status="all" class="active">Все</button>
+                    <button type="button" data-status="active">Активные</button>
+                    <button type="button" data-status="completed">Завершенные</button>
+                </div>
+
+                <label class="search-field">
+                    <span>Поиск</span>
+                    <input id="search" type="search" placeholder="Название задачи">
+                </label>
+
+                <label>
+                    <span>Приоритет</span>
+                    <select id="priorityFilter">
+                        <option value="">Все</option>
+                        <option value="HIGH">Высокий</option>
+                        <option value="MEDIUM">Средний</option>
+                        <option value="LOW">Низкий</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Сортировка</span>
+                    <select id="sort">
+                        <option value="createdAt,desc">Сначала новые</option>
+                        <option value="createdAt,asc">Сначала старые</option>
+                        <option value="dueDate,asc">По сроку</option>
+                        <option value="priority,desc">По приоритету</option>
+                        <option value="title,asc">По названию</option>
+                    </select>
+                </label>
+            </div>
+
+            <div id="taskList" class="task-list" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <div class="toast" id="toast" role="status"></div>
+
+    <script type="module" src="./js/app.js"></script>
+</body>
+</html>
