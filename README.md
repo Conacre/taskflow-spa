@@ -2,68 +2,130 @@
 
 Дипломный проект: одностраничное веб-приложение для управления задачами на основе архитектуры SPA.
 
-## Быстрый запуск в VS Code
+Приложение состоит из Spring Boot backend, REST API, базы данных H2 и SPA-интерфейса на HTML, CSS и JavaScript. Основной запуск выполняется через Spring Boot: пользовательский интерфейс и REST API доступны на одном локальном адресе.
 
-1. Скачать проект с GitHub.
-2. Открыть папку проекта в VS Code.
-3. Нажать `Ctrl+Shift+B`.
-4. Выбрать задачу `Start app`, если VS Code спросит.
-5. Открыть `http://localhost:8080/`.
+## Что нужно установить
 
-Подробная инструкция находится в файле `START_IN_VSCODE.md`.
+Для обычного запуска нужны:
 
-## Структура
+- VS Code;
+- JDK 17;
+- интернет при первом запуске, чтобы Maven Wrapper скачал зависимости.
 
-```text
-backend/          Spring Boot REST API
-frontend/         SPA-интерфейс без сборщика
-scripts/          вспомогательные скрипты для демонстрации
-demo-screenshots/ скриншоты работающего приложения
+Maven отдельно устанавливать не нужно. В проект добавлен Maven Wrapper.
+
+Node.js для основного запуска не нужен. Он используется только для дополнительного скрипта с демо-данными.
+
+Проверить Java можно командой:
+
+```powershell
+java -version
 ```
 
-## Требования
+## Как скачать проект
 
-- JDK 17.
-- Maven отдельно устанавливать не обязательно: backend запускается через Maven Wrapper.
-- Node.js нужен только для отдельного frontend-сервера на `5173` и демо-скрипта.
+Вариант через Git:
 
-## Frontend
+```powershell
+git clone https://github.com/Conacre/taskflow-spa.git
+cd taskflow-spa
+```
 
-Основной запуск frontend выполняется через Spring Boot: статические файлы интерфейса размещены в backend и доступны по адресу:
+Вариант без Git:
+
+1. Открыть репозиторий на GitHub.
+2. Нажать `Code`.
+3. Нажать `Download ZIP`.
+4. Распаковать архив.
+5. Открыть распакованную папку в VS Code.
+
+## Запуск в VS Code
+
+1. Открыть папку проекта в VS Code.
+2. Нажать `Ctrl+Shift+B`.
+3. Если VS Code спросит, выбрать задачу `Start app`.
+4. Дождаться запуска Spring Boot.
+5. Открыть в браузере:
 
 ```text
 http://localhost:8080/
 ```
 
-Отдельный frontend-сервер можно запустить из папки проекта:
-
-```powershell
-node frontend/server.mjs
-```
-
-После запуска открыть:
+REST API доступен по адресу:
 
 ```text
-http://localhost:5173/
+http://localhost:8080/api/tasks
 ```
 
-Если backend недоступен, frontend автоматически использует демо-хранилище в `localStorage`. Когда Spring Boot backend запущен на `http://localhost:8080`, запросы идут в REST API.
+При первом запуске Maven Wrapper может несколько минут скачивать зависимости. Это нормально.
 
-## Backend
+## Запуск из терминала
 
-Backend рассчитан на JDK 17. Maven отдельно устанавливать не обязательно: в папке `backend` есть Maven Wrapper. Корневой скрипт `run-backend.cmd` использует его автоматически.
+Если запускать без VS Code-задачи, из корня проекта выполнить:
 
 ```powershell
 .\run-backend.cmd
 ```
 
-Запуск backend-тестов:
+После запуска открыть:
 
-```powershell
-.\run-backend-tests.cmd
+```text
+http://localhost:8080/
 ```
 
-REST API:
+## Проверка работы
+
+Проверка интерфейса:
+
+```text
+http://localhost:8080/
+```
+
+Проверка API:
+
+```text
+http://localhost:8080/api/tasks
+```
+
+Если API работает, браузер покажет JSON-массив задач. Например:
+
+```json
+[]
+```
+
+## Демо-данные
+
+Если установлен Node.js, можно заполнить приложение демонстрационными задачами:
+
+```powershell
+node scripts/seed-demo-data.mjs
+```
+
+После этого нужно обновить страницу:
+
+```text
+http://localhost:8080/
+```
+
+## Остановка приложения
+
+В терминале, где запущено приложение, нажать:
+
+```text
+Ctrl+C
+```
+
+## Структура проекта
+
+```text
+backend/          Spring Boot backend, REST API и static-ресурсы frontend
+frontend/         исходные файлы SPA-интерфейса
+scripts/          вспомогательные скрипты для демонстрации
+demo-screenshots/ скриншоты работающего приложения
+.vscode/          задачи VS Code для быстрого запуска
+```
+
+## Основные REST endpoints
 
 ```text
 GET    /api/tasks
@@ -74,7 +136,7 @@ PATCH  /api/tasks/{id}/toggle
 DELETE /api/tasks/{id}
 ```
 
-Фильтрация и сортировка:
+Фильтрация, поиск и сортировка:
 
 ```text
 GET /api/tasks?status=active
@@ -84,24 +146,26 @@ GET /api/tasks?priority=HIGH
 GET /api/tasks?sort=createdAt,desc
 ```
 
-## Демо-данные для показа
+## Тесты
 
-Когда backend уже запущен, можно очистить текущий список задач и создать демонстрационный набор:
+Запуск backend-тестов:
 
 ```powershell
-node scripts/seed-demo-data.mjs
+.\run-backend-tests.cmd
 ```
 
-После этого интерфейс на `http://localhost:5173/` покажет подготовленные задачи для демонстрации.
+## Если не запускается
 
-## Публикация на GitHub
+Проверить, что установлена Java 17:
 
-Если Git не установлен, проект можно загрузить через веб-интерфейс GitHub:
+```powershell
+java -version
+```
 
-1. Создать новый публичный репозиторий.
-2. Открыть созданный репозиторий и выбрать `uploading an existing file`.
-3. Загрузить содержимое папки `todo-spa-diploma-github`, а не саму папку целиком.
-4. Добавить commit message, например `Initial diploma project version`.
-5. Нажать `Commit changes`.
+Проверить, что порт `8080` свободен:
 
-После публикации в репозитории должны отображаться папки `backend`, `frontend`, `scripts`, `demo-screenshots` и файл `README.md`.
+```powershell
+Get-NetTCPConnection -LocalPort 8080 -State Listen
+```
+
+Если порт занят, остановить другой процесс, который использует `8080`, и запустить приложение снова.
