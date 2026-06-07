@@ -248,15 +248,15 @@ function renderStats() {
     const active = total - completed;
 
     elements.stats.innerHTML = [
-        renderStat("Всего", total),
-        renderStat("Активные", active),
-        renderStat("Завершенные", completed)
+        renderStat("Всего", total, "total"),
+        renderStat("Активные", active, "active"),
+        renderStat("Завершенные", completed, "completed")
     ].join("");
 }
 
-function renderStat(label, value) {
+function renderStat(label, value, type) {
     return `
-        <div class="stat">
+        <div class="stat ${type}">
             <strong>${value}</strong>
             <span>${label}</span>
         </div>
@@ -284,23 +284,25 @@ function renderTasks() {
 
 function renderTaskCard(task) {
     const priority = priorityText(task.priority);
+    const priorityClass = String(task.priority || "MEDIUM").toLowerCase();
     const dueDate = task.dueDate ? formatDate(task.dueDate) : "Без срока";
     const category = task.category ? escapeHtml(task.category) : "Без категории";
     const isDeletePending = Number(state.pendingDeleteId) === Number(task.id);
+    const statusClass = task.completed ? "status-completed" : "status-active";
 
     return `
-        <article class="task-card ${task.completed ? "completed" : ""}">
+        <article class="task-card priority-${priorityClass} ${task.completed ? "completed" : ""}">
             <input class="task-check" type="checkbox" data-action="toggle" data-id="${task.id}" ${task.completed ? "checked" : ""}>
             <div>
                 <div class="task-title-row">
                     <h3>${escapeHtml(task.title)}</h3>
-                    <span class="badge ${String(task.priority).toLowerCase()}">${priority}</span>
+                    <span class="badge ${priorityClass}">${priority}</span>
                 </div>
                 ${task.description ? `<p class="task-description">${escapeHtml(task.description)}</p>` : ""}
                 <div class="task-meta">
                     <span class="badge">${category}</span>
                     <span class="badge">${dueDate}</span>
-                    <span class="badge">${task.completed ? "Завершена" : "Активна"}</span>
+                    <span class="badge ${statusClass}">${task.completed ? "Завершена" : "Активна"}</span>
                 </div>
             </div>
             <div class="task-actions">
